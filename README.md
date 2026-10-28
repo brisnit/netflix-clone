@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Netflix Homepage Clone (Prototype)
 
-## Getting Started
+A frontend-only, pixel-accurate recreation of the netflix.com (US, logged-out) homepage, built for design exploration and demonstration.
 
-First, run the development server:
+> **Unofficial.** This project is not affiliated with, endorsed by, or connected to Netflix. It is a non-commercial prototype and must not be deployed or presented as an official Netflix site.
+
+## Run locally
+
+Requires Node.js 20+.
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Next.js (App Router) · React · TypeScript · Tailwind CSS · Lucide React. There's no backend, API, auth, analytics or storage.
 
-## Learn More
+## What works
 
-To learn more about Next.js, take a look at the following resources:
+- **Trending Now** carousel: horizontal scroll, previous/next paging, card hover scale, title preview modal on click
+- **FAQ** accordion (one item open at a time)
+- **Language selector** in the header and footer, synced in local state
+- **Email fields** accept input and show Netflix's validation messages. Submit is always blocked, and nothing is stored or sent.
+- **Sign In** opens a mock "prototype only" dialog
+- Responsive layout using Netflix's breakpoints: `<600`, `600–959`, `960–1279`, `≥1280`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project layout
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```
+app/            layout, page, global styles (breakpoints, gradients, curve, rank numerals)
+components/     Header, Hero, EmailForm, AdsBanner, TrendingNow, TitleModal, ValueProps, Faq, Footer, …
+lib/data.ts     static copy, titles, FAQ and footer content
+lib/styles.ts   shared container / section classes
+public/images/  section illustrations (SVG)
+```
 
-## Deploy on Vercel
+## Notes on assets
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Layout values (spacing, sizes, colors, gradients) were measured from the live page's computed styles at 1440, 1024, 768 and 390px.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+The hero artwork, posters, title art and the Netflix Sans font are **loaded at runtime from Netflix's public CDNs**. They aren't stored in this repo. Netflix rotates these URLs, so images may eventually stop loading. If that happens, update the URLs in `lib/data.ts`. All Netflix names, logos, artwork and fonts belong to Netflix, Inc.

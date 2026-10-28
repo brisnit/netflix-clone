@@ -1,26 +1,176 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Netflix Sans is served by Netflix's CDN with CORS enabled; it is not bundled here. */
+@font-face {
+  font-family: "Netflix Sans";
+  font-weight: 400;
+  font-display: swap;
+  src: url("https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Rg.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Netflix Sans";
+  font-weight: 500;
+  font-display: swap;
+  src: url("https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Md.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Netflix Sans";
+  font-weight: 700;
+  font-display: swap;
+  src: url("https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Bd.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Netflix Sans";
+  font-weight: 900;
+  font-display: swap;
+  src: url("https://assets.nflxext.com/ffe/siteui/fonts/netflix-sans/v3/NetflixSans_W_Blk.woff2") format("woff2");
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Breakpoints mirror Netflix's: S < 600 ≤ M < 960 ≤ L < 1280 ≤ XL */
+@theme {
+  --breakpoint-*: initial;
+  --breakpoint-m: 600px;
+  --breakpoint-l: 960px;
+  --breakpoint-xl: 1280px;
+
+  --font-sans: "Netflix Sans", "Helvetica Neue", "Segoe UI", Roboto, Ubuntu, sans-serif;
+
+  --color-nf-red: #e50914;
+  --color-nf-red-hover: #c11119;
+  --color-nf-gray: #2d2d2d;
+  --color-nf-gray-hover: #414141;
+  --color-nf-modal: #161616;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: #000;
+  color: #fff;
+  line-height: normal;
+  font-family: var(--font-sans);
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Hero darkening overlay */
+.hero-gradient {
+  background: linear-gradient(
+    7deg,
+    rgba(0, 0, 0, 0.85) 10%,
+    rgba(0, 0, 0, 0.847) 17.25%,
+    rgba(0, 0, 0, 0.835) 24.5%,
+    rgba(0, 0, 0, 0.82) 31.75%,
+    rgba(0, 0, 0, 0.796) 39%,
+    rgba(0, 0, 0, 0.765) 46.25%,
+    rgba(0, 0, 0, 0.725) 53.5%,
+    rgba(0, 0, 0, 0.686) 60.75%,
+    rgba(0, 0, 0, 0.655) 68%,
+    rgba(0, 0, 0, 0.63) 75.25%,
+    rgba(0, 0, 0, 0.616) 82.5%,
+    rgba(0, 0, 0, 0.604) 89.75%,
+    rgba(0, 0, 0, 0.6) 97%
+  );
+}
+
+/* Elliptical divider under the hero. The ::before gradient shows through the
+   transparent top/side border to form the red rim. */
+.hero-curve {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -50%;
+  right: -50%;
+  border: 4px solid transparent;
+  border-bottom: 0;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  background:
+    radial-gradient(50% 500% at 50% -420%, rgba(64, 97, 231, 0.4) 80%, rgba(0, 0, 0, 0.1) 100%) padding-box,
+    #000 padding-box;
+}
+.hero-curve::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  margin-top: -4px;
+  z-index: -1;
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  background: linear-gradient(
+    to right,
+    rgb(33, 13, 22) 16%,
+    rgb(184, 40, 105),
+    rgb(229, 9, 20),
+    rgb(184, 40, 105),
+    rgb(33, 13, 22) 84%
+  );
+}
+@media (min-width: 600px) {
+  .hero-curve { left: -40%; right: -40%; }
+}
+@media (min-width: 960px) {
+  .hero-curve { left: -25%; right: -25%; }
+}
+@media (min-width: 1280px) {
+  .hero-curve { left: -15%; right: -15%; }
+}
+
+/* Top 10 rank numerals: grey fill, white outline drawn outside the glyph */
+.rank-numeral {
+  position: relative;
+  display: inline-block;
+  font-weight: 700;
+  line-height: 1;
+  color: #414141;
+  -webkit-text-stroke: 4px #fff;
+  text-shadow: 0 0 24px rgba(0, 0, 0, 0.5);
+}
+.rank-numeral::before {
+  content: attr(data-rank);
+  position: absolute;
+  inset: 0;
+  -webkit-text-stroke: 0;
+  color: #414141;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.value-prop-card {
+  background: linear-gradient(149deg, rgb(25, 34, 71) 0%, rgb(33, 14, 23) 96.86%);
+  backdrop-filter: blur(30px);
+}
+
+.ads-card {
+  background: linear-gradient(91deg, rgb(38, 23, 51), rgb(21, 26, 63));
+}
+.ads-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  opacity: 0;
+  background: linear-gradient(91deg, rgb(72, 37, 102) 0%, rgb(22, 29, 82) 99.51%);
+  transition: opacity 0.25s cubic-bezier(0.32, 0.94, 0.6, 1);
+}
+.ads-card:hover::before {
+  opacity: 1;
+}
+
+.title-modal-shade {
+  background:
+    linear-gradient(40deg, rgb(22, 22, 22) 24.16%, rgba(6, 10, 23, 0) 56.61%),
+    linear-gradient(0deg, rgb(22, 22, 22) 3.91%, rgba(6, 10, 23, 0) 69.26%);
+}
+
+/* Netflix's standard button easing */
+.nf-ease {
+  transition-property: background-color, border-color;
+  transition-duration: 0.25s;
+  transition-timing-function: cubic-bezier(0.32, 0.94, 0.6, 1);
 }
